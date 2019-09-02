@@ -265,7 +265,7 @@ module.exports = ".container{\n    margin-top: 5vh;\n}\n\nlabel{\n    float: lef
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"details\">\n  <form *ngIf=\"isFormCreated\" [formGroup]=\"orderForm\" (ngSubmit)=\"onSubmit()\">\n\n    <div class=\"row mb-3\">\n      <button class=\"btn btn-primary\" (click)=\"back()\">Back</button>\n    </div>\n\n    <div class=\"row align-items-center\">\n      <div class=\"col-5\">\n\n        <div class=\"form-group\">\n          <label class=\"bold\" for=\"exampleInputEmail1\">Email:</label>\n          <input type=\"email\" formControlName=\"email\" class=\"form-control\" id=\"email\" aria-describedby=\"emailHelp\"\n            placeholder=\"Enter email\" (keyup)=\"checkFormStatus($event)\">\n          <small *ngIf=\"orderForm.controls['email'].invalid && orderForm.controls['email'].touched\"\n            class=\"form-text text-muted\">Email is invalid</small>\n        </div>\n\n\n      </div>\n\n      <div class=\"col-4\">\n        <div class=\"form-group\">\n          <label class=\"bold\" for=\"exampleInputEmail1\">Mobile:</label>\n          <input type=\"number\" formControlName=\"mobile\" class=\"form-control\" id=\"mobile\" aria-describedby=\"mobile\"\n            placeholder=\"Enter mobile\" (keyup)=\"checkFormStatus($event)\">\n          <small *ngIf=\"orderForm.controls['mobile'].invalid && orderForm.controls['mobile'].touched\"\n            class=\"form-text text-muted\">Mobile is invalid</small>\n        </div>\n\n      </div>\n\n      <div class=\"col-3\">\n        <button class=\"btn btn-lg btn-primary btn-block text-uppercase\" type=\"submit\"\n          [disabled]=\"orderForm.invalid || !hasFormChanged\">Update</button>\n      </div>\n    </div>\n\n    <div class=\"order-details\">\n      <div class=\"heading bold\">\n        Order Items :\n      </div>\n      <br>\n      <div class=\"card row mt-3\" *ngFor=\"let item of orderItems\">\n        <div class=\"order-item\" *ngFor=\"let column of itemDetailsColumns\">\n          <div class=\"mr-3 bold\">{{column['text']}}:</div>\n          <div class=\"ml-4\">\n            {{item[column['id']]}}\n          </div>\n        </div>\n\n      </div>\n    </div>\n\n  </form>\n\n</div>"
+module.exports = "<div class=\"details\">\n  <form *ngIf=\"isFormCreated\" [formGroup]=\"orderForm\" (ngSubmit)=\"onSubmit()\">\n\n    <div class=\"row mb-3\">\n      <button class=\"btn btn-primary\" (click)=\"back()\">Back</button>\n    </div>\n\n    <div class=\"row align-items-center\">\n      <div class=\"col-5\">\n\n        <div class=\"form-group\">\n          <label class=\"bold\" for=\"exampleInputEmail1\">Email:</label>\n          <input type=\"email\" formControlName=\"email\" class=\"form-control\" id=\"email\" aria-describedby=\"emailHelp\"\n            placeholder=\"Enter email\" (keyup)=\"checkFormStatus($event)\">\n          <small *ngIf=\"orderForm.controls['email'].invalid && orderForm.controls['email'].touched\"\n            class=\"form-text text-muted\">Email is invalid</small>\n        </div>\n\n\n      </div>\n\n      <div class=\"col-4\">\n        <div class=\"form-group\">\n          <label class=\"bold\" for=\"exampleInputEmail1\">Mobile:</label>\n          <input type=\"text\" formControlName=\"mobile\" class=\"form-control\" id=\"mobile\" aria-describedby=\"mobile\"\n            placeholder=\"Enter mobile\" (keyup)=\"checkFormStatus($event)\">\n          <small *ngIf=\"orderForm.controls['mobile'].invalid && orderForm.controls['mobile'].touched\"\n            class=\"form-text text-muted\">Mobile is invalid</small>\n        </div>\n\n      </div>\n\n      <div class=\"col-3\">\n        <button class=\"btn btn-lg btn-primary btn-block text-uppercase\" type=\"submit\"\n          [disabled]=\"orderForm.invalid || !hasFormChanged\">Update</button>\n      </div>\n    </div>\n\n    <div class=\"order-details\">\n      <div class=\"heading bold\">\n        Order Items :\n      </div>\n      <br>\n      <div class=\"card row mt-3\" *ngFor=\"let item of orderItems\">\n        <div class=\"order-item\" *ngFor=\"let column of itemDetailsColumns\">\n          <div class=\"mr-3 bold\">{{column['text']}}:</div>\n          <div class=\"ml-4\">\n            {{item[column['id']]}}\n          </div>\n        </div>\n\n      </div>\n    </div>\n\n  </form>\n\n</div>"
 
 /***/ }),
 
@@ -342,6 +342,7 @@ var OrderDetailsComponent = /** @class */ (function () {
     };
     OrderDetailsComponent.prototype.setInitialState = function () {
         var order = JSON.parse(localStorage.getItem('order'));
+        console.log("ORDER ", order);
         this.createForm(order);
         this.initialState = {
             email: order.email,
@@ -349,9 +350,10 @@ var OrderDetailsComponent = /** @class */ (function () {
         };
     };
     OrderDetailsComponent.prototype.createForm = function (values) {
+        console.log("VAL ", values.mobile);
         this.orderForm = this.fb.group({
-            email: [values.email, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].email]],
-            mobile: [values.mobile],
+            email: [values.email, []],
+            mobile: [values.mobile, []],
         });
         this.isFormCreated = true;
     };
@@ -378,7 +380,6 @@ var OrderDetailsComponent = /** @class */ (function () {
             };
             this.orderEdit$ = this.orderService.updateOrderDetails(payload)
                 .subscribe(function (res) {
-                console.log(res);
                 if (res['success']) {
                     _this.toastrService.success("Details Edited Successfully", '', {
                         timeOut: 3000
@@ -403,7 +404,6 @@ var OrderDetailsComponent = /** @class */ (function () {
         }
     };
     OrderDetailsComponent.prototype.checkFormStatus = function (event) {
-        console.log("EVENT!!", event);
         if (this.orderForm.controls['email'].value !== this.initialState.email || this.orderForm.controls['mobile'].value !== this.initialState.mobile) {
             this.hasFormChanged = true;
         }
@@ -416,7 +416,13 @@ var OrderDetailsComponent = /** @class */ (function () {
         else {
             this.orderForm.controls['mobile'].setValidators(null);
         }
-        this.orderForm.controls['mobile'].updateValueAndValidity();
+        if (this.orderForm.controls['email'].value !== null) {
+            this.orderForm.controls['email'].setValidators([_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].email]);
+        }
+        else {
+            this.orderForm.controls['email'].setValidators(null);
+        }
+        this.orderForm.updateValueAndValidity();
     };
     OrderDetailsComponent.prototype.ngOnDestroy = function () {
         if (this.orderDetails$) {
@@ -527,7 +533,7 @@ var OrderListComponent = /** @class */ (function () {
                 sortAsc: true
             }
         ];
-        this.paginationList = [1, 5, 10, 20];
+        this.paginationList = [5, 10, 20];
         this.sortBy = this.columnList[0];
         this.limit = this.paginationList[0];
     }
@@ -752,7 +758,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
 
 var BASE_URL = _environments_environment__WEBPACK_IMPORTED_MODULE_0__["environment"].apiUrl;
-var MOBILE_REGEX = /^[7-9][0-9]{9}$/;
+var MOBILE_REGEX = /^(\+91)?[7-9][0-9]{9}$/;
 
 
 
