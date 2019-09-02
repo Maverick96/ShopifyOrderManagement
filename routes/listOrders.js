@@ -20,7 +20,7 @@ function getOrderList(req, res, next) {
         console.log(result)
         res.json({
             data: result.rows,
-            count: result.count
+            total: result.count
         })
     })
         .catch(err => {
