@@ -18,18 +18,18 @@
         "logging": false
     },
     "test": {
-        "username": "sql12303063",
-        "password": "fHHnl9WitW",
-        "database": "sql12303063",
+        "username": "sql12303729",
+        "password": "TlUVTY93hU",
+        "database": "sql12303729",
         "host": "sql12.freemysqlhosting.net",
         "dialect": "mysql",
         "operatorsAliases": false,
         "logging": false
     },
     "production": {
-        "username": "sql12303063",
-        "password": "fHHnl9WitW",
-        "database": "sql12303063",
+        "username": "sql12303729",
+        "password": "TlUVTY93hU",
+        "database": "sql12303729",
         "host": "sql12.freemysqlhosting.net",
         "dialect": "mysql",
         "operatorsAliases": false,
