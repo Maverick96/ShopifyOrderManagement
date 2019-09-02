@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-tunnel": "./node_modules/.bin/lt --port 8000",
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "start": "node app"
   },
   "repository": {
     "type": "git",
