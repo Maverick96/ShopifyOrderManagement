@@ -464,7 +464,7 @@ module.exports = ".order-list{\n    display: flex;\n    width: 100%;\n    flex-d
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"order-list\">\n\n  <table class=\"table table-hover\">\n    <thead>\n      <tr>\n        <th scope=\"col\" *ngFor=\"let column of columnList\" (click)=\"changeSort(column)\">\n          {{column.text}}\n\n          <span *ngIf=\"column.id === sortBy['id']\">\n            <img *ngIf=\"sortBy['sortAsc']\" src=\"../../assets/images/sort-down.svg\" width=\"15\" height=\"15\" />\n            <img *ngIf=\"!sortBy['sortAsc']\" src=\"../../assets/images/sort-up.svg\" width=\"15\" height=\"15\" />\n          </span>\n\n        </th>\n      </tr>\n    </thead>\n\n    <tbody>\n      <tr *ngFor=\"let order of orderListData;\" (click)=\"openDetails(order)\">\n        <td *ngFor=\"let column of columnList\">\n          <div>\n            {{order[column['id']]}}\n          </div>\n\n        </td>\n      </tr>\n    </tbody>\n  </table>\n\n  <div class=\"pagination\">\n    <button class=\"btn btn-primary\" (click)=\"prevPage()\">\n      Previous\n    </button>\n\n    <div class=\"mx-4\">\n      {{currentPage}}\n    </div>\n\n    <button class=\"btn btn-primary\" (click)=\"nextPage()\">\n      Next\n    </button>\n\n    <select class=\"ml-4\" (change)=\"changePagination($event)\" [(ngModel)]=\"limit\">\n      <option *ngFor=\"let page of paginationList\" [selected]=\"page === limit\" [value]=\"page\">{{page}}</option>\n\n    </select>\n  </div>\n</div>"
+module.exports = "<div class=\"order-list\">\n\n  <table class=\"table table-hover\">\n    <thead>\n      <tr>\n        <th scope=\"col\" *ngFor=\"let column of columnList\" (click)=\"changeSort(column)\">\n          {{column.text}}\n\n          <span *ngIf=\"column.id === sortBy['id']\">\n            <img *ngIf=\"sortBy['sortAsc']\" src=\"../../assets/images/sort-down.svg\" width=\"15\" height=\"15\" />\n            <img *ngIf=\"!sortBy['sortAsc']\" src=\"../../assets/images/sort-up.svg\" width=\"15\" height=\"15\" />\n          </span>\n\n        </th>\n      </tr>\n    </thead>\n\n    <tbody>\n      <tr *ngFor=\"let order of orderListData;\" (click)=\"openDetails(order)\">\n        <td *ngFor=\"let column of columnList\">\n          <div>\n            {{order[column['id']]}}\n          </div>\n\n        </td>\n      </tr>\n    </tbody>\n  </table>\n\n  <div class=\"pagination\">\n    <button class=\"btn btn-primary\" [disabled]=\"currentPage === 1\" (click)=\"prevPage()\">\n      Previous\n    </button>\n\n    <div class=\"mx-4\">\n      {{currentPage}}\n    </div>\n\n    <button class=\"btn btn-primary\" [disabled]=\"this.currentPage * this.limit >= this.totalItems\" (click)=\"nextPage()\">\n      Next\n    </button>\n\n    <select class=\"ml-4\" (change)=\"changePagination($event)\" [(ngModel)]=\"limit\">\n      <option *ngFor=\"let page of paginationList\" [selected]=\"page === limit\" [value]=\"page\">{{page}}</option>\n\n    </select>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -527,7 +527,7 @@ var OrderListComponent = /** @class */ (function () {
                 sortAsc: true
             }
         ];
-        this.paginationList = [5, 10, 20];
+        this.paginationList = [1, 5, 10, 20];
         this.sortBy = this.columnList[0];
         this.limit = this.paginationList[0];
     }
@@ -590,20 +590,16 @@ var OrderListComponent = /** @class */ (function () {
         this.setSortBy();
     };
     OrderListComponent.prototype.prevPage = function () {
-        if (this.currentPage > 1) {
-            this.currentPage--;
-            this.offset = (this.currentPage - 1) * this.limit;
-            this.fetchList();
-            this.setCurrentPage();
-        }
+        this.currentPage--;
+        this.offset = (this.currentPage - 1) * this.limit;
+        this.fetchList();
+        this.setCurrentPage();
     };
     OrderListComponent.prototype.nextPage = function () {
-        if (this.currentPage * this.limit < this.totalItems) {
-            this.offset = this.currentPage * this.limit;
-            this.currentPage++;
-            this.fetchList();
-            this.setCurrentPage();
-        }
+        this.offset = this.currentPage * this.limit;
+        this.currentPage++;
+        this.fetchList();
+        this.setCurrentPage();
     };
     OrderListComponent.prototype.changePagination = function (event) {
         this.offset = 0;
@@ -753,7 +749,9 @@ var appRoutes = [
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BASE_URL", function() { return BASE_URL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MOBILE_REGEX", function() { return MOBILE_REGEX; });
-var BASE_URL = '';
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../environments/environment */ "./src/environments/environment.ts");
+
+var BASE_URL = _environments_environment__WEBPACK_IMPORTED_MODULE_0__["environment"].apiUrl;
 var MOBILE_REGEX = /^[7-9][0-9]{9}$/;
 
 
